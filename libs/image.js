@@ -148,8 +148,6 @@ Generator.prototype = {
         // 记录这些图片已经被打包到其他文件上了。
         list.forEach(function(image) {
             var srcImage = that.images[image.image];
-
-            console.log(srcImage.fullname);
             var map = srcImage.map = srcImage.map || {};
             map.cssspritePkg = image_file.getId();
         });

@@ -51,7 +51,7 @@ function Generator(file, index, list, images, ret, settings, opt) {
     this.images = images;
     this.index = index;
     this.rem = settings.rem || 1;
-    this.units = "px";
+    this.units = settings.rem ? "rem" : "px";
 
     fis.util.map(list, function (group, glist) {
         that.create(group, glist);

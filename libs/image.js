@@ -59,65 +59,65 @@ function Generator(file, index, list, images, ret, settings, opt) {
 }
 
 Generator.prototype = {
-	create: function(group, list) {
-    	var that = this;
-		var list_ = {};
-	    var scales = {};
+    create: function(group, list) {
+        var that = this;
+        var list_ = {};
+        var scales = {};
 
-	    function getImage(release) {
-	        if (that.images.hasOwnProperty(release)) {
-	            return that.images[release];
-	        }
-	        return false;
-	    }
+        function getImage(release) {
+            if (that.images.hasOwnProperty(release)) {
+                return that.images[release];
+            }
+            return false;
+        }
 
-	    function insertToObject(o, key, elm) {
-	        if (o[key]) {
-	            o[key].push(elm);
-	        } else {
-	            o[key] = [elm];
-	        }
-	    }
+        function insertToObject(o, key, elm) {
+            if (o[key]) {
+                o[key].push(elm);
+            } else {
+                o[key] = [elm];
+            }
+        }
 
-	    fis.util.map(list, function (k, bg) {
-	        var image_ = Image(getImage(bg.getImageUrl()).getContent());
-	        var direct = bg.getDirect();
+        fis.util.map(list, function (k, bg) {
+            var image_ = Image(getImage(bg.getImageUrl()).getContent());
+            var direct = bg.getDirect();
 
-	        bg.image_ = image_;
+            bg.image_ = image_;
 
-	        var scale_ = bg.size[0] / image_.size().width;
+            var scale_ = bg.size[0] / image_.size().width;
 
-	        // rem为单位
-        	if(bg.units) that.units = bg.units;
-        	if(that.units=='rem') {
-        		scale_ = 1;
-        	}
-	        if ((that.units=='rem' || bg.size[0] != -1) && scale_ != that.settings.scale) {
-            	scale_ = '' + scale_;
-	            //不支持x, y
-	            if (direct === 'z') {
-	                if (scales[scale_]) {
-	                    insertToObject(scales[scale_], direct, bg);
-	                } else {
-	                    scales[scale_] = {};
-	                    insertToObject(scales[scale_], direct, bg);
-	                }
-	            }
-	        } else {
-	            insertToObject(list_, direct, bg);
-	        }
-	    });
+            // rem为单位
+            if(bg.units) that.units = bg.units;
+            if(that.units=='rem') {
+                scale_ = 1;
+            }
+            if ((that.units=='rem' || bg.size[0] != -1) && scale_ != that.settings.scale) {
+                scale_ = '' + scale_;
+                //不支持x, y
+                if (direct === 'z') {
+                    if (scales[scale_]) {
+                        insertToObject(scales[scale_], direct, bg);
+                    } else {
+                        scales[scale_] = {};
+                        insertToObject(scales[scale_], direct, bg);
+                    }
+                }
+            } else {
+                insertToObject(list_, direct, bg);
+            }
+        });
 
-	    this.fill(group, list_['x'], 'x');
-	    this.fill(group, list_['y'], 'y');
-	    this.zFill(group, list_['z'], that.settings.scale);
+        this.fill(group, list_['x'], 'x');
+        this.fill(group, list_['y'], 'y');
+        this.zFill(group, list_['z'], that.settings.scale);
 
-	    //background-size
-	    fis.util.map(scales, function (s, l) {
-	        s = parseFloat(s);
-	        that.zFill(group, l['z'], s);
-	    });
-	},
+        //background-size
+        fis.util.map(scales, function (s, l) {
+            s = parseFloat(s);
+            that.zFill(group, l['z'], s);
+        });
+    },
     _imageExist: function (images, url) {
         for (var i = 0, len = images.length; i < len; i++) {
             if (url == images[i].url) {
@@ -140,24 +140,23 @@ Generator.prototype = {
         ext = (group=='__default__' ? '' : '_'+group) + ext;
 
         var root = fis.project.getProjectPath(),
-        	to = this.file.spriteTo ? this.file.spriteTo : this.settings.to,
-        	to_path = root + fis.util((to.substr(0,1)=='/' ? '/' : this.file.subdirname) +'/'+ to +'/'+ this.file.filename + ext),
-        	pkg_path = to_path.substring(root.length);
+            to = this.file.spriteTo ? this.file.spriteTo : this.settings.to,
+            to_path = root + fis.util((to.substr(0,1)=='/' ? '/' : this.file.subdirname) +'/'+ to +'/'+ this.file.filename + ext),
+            pkg_path = to_path.substring(root.length);
 
         var image_file = fis.file.wrap(to_path);
         image_file.setContent(image.encode('png'));
         fis.compile(image_file);
+        this.file.addLink(image_file.subpath);
         this.ret.pkg[pkg_path] = image_file;
 
         // 记录这些图片已经被打包到其他文件上了。
         var images = this.images;
         list.forEach(function(item) {
             var image = images[item.image],
-            	map = image.map = image.map || {};
+                map = image.map = image.map || {};
             map.cssspritePkg = image_file.getId();
         });
-
-
 
         function unique(arr) {
             var map = {};
@@ -266,8 +265,8 @@ Generator.prototype = {
             }
             for (k = 0, count = images[i].cls.length; k < count; k++) {
                 this.css += images[i].cls[k].selector + '{background-position:'
-                    + (images[i].cls[k].position[0] + -x) / rem + this.units + ' '
-                    + (images[i].cls[k].position[1] + -y) / rem + this.units + '}';
+                    + ((images[i].cls[k].position[0] + -x) / rem) + this.units + ' '
+                    + ((images[i].cls[k].position[1] + -y) / rem) + this.units + '}';
                 cls.push(images[i].cls[k].selector);
             }
             if (direct == 'x') {
@@ -384,8 +383,8 @@ Generator.prototype = {
 
                     // console.log(this.units);
                     this.css += current.cls[j].selector + '{background-position:'
-                        + x_ / rem + this.units + ' '
-                        + y_ / rem + this.units + '}';
+                        + (x_ / rem) + this.units + ' '
+                        + (y_ / rem) + this.units + '}';
                     cls.push(current.cls[j].selector);
                 }
             }
@@ -398,9 +397,9 @@ Generator.prototype = {
                 x = max[zero] + max[left] - current.w;
                 image.draw(Image(current.image), x, y);
                 for (j = 0, count = current.cls.length; j < count; j++) {
-                    var x_, y_ = (current.cls[j].position[1] + -y) / rem + this.units + ' ';
+                    var x_, y_ = ((current.cls[j].position[1] + -y) / rem) + this.units + ' ';
                     if (scale) {
-                        y_ = ((current.cls[j].position[1] + -y) * scale) / rem + this.units + ''
+                        y_ = ((current.cls[j].position[1] + -y) * scale / rem) + this.units + ''
                     }
 
                     if (current.cls[j].position[0] == 'right') {
@@ -410,7 +409,7 @@ Generator.prototype = {
                         if (scale) {
                             x_ = x_ * scale;
                         }
-                        x_ = x_ / rem + this.units + ' ';
+                        x_ = (x_ / rem) + this.units + ' ';
                     }
 
                     this.css += current.cls[j].selector + '{background-position:'

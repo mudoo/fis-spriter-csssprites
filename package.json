@@ -1,7 +1,7 @@
 {
   "name": "fis-spriter-csssprites-group",
-  "version": "0.3.23",
-  "description": "基于fis的csssprite，支持分组合并图片，@media处理，合并路径指定",
+  "version": "0.4.0",
+  "description": "基于fis的csssprite，支持REM单位、分组合并图片、@media处理、合并路径指定",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -14,7 +14,7 @@
     "url": "https://github.com/mudoo/fis-spriter-csssprites-group.git"
   },
   "dependencies": {
-    "images": "3.0.0"
+    "images": "3.0.1"
   },
   "keywords": [
     "fis",

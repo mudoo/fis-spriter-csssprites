@@ -92,7 +92,7 @@ var Rules = Object.derive(function (id, css) {
                     info = _.query(info.rest);
                     // 图片分组合并支持
                     self.image = info.origin.replace(__sprites_re, function (value, first, group, last) {
-                        self._group = group ? group : '__default__';
+                        if(group) self._group = group;
                         if (first === '?') {
                             if (last === '&') {
                                 return first;

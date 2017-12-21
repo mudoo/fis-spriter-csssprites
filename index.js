@@ -74,39 +74,39 @@ function _processPart(content, file, index, ret, settings, opt){
 
 var __media_re = /\@media\s*?([^\{]*?)\s*\{((?:[^\}]*?\{[\s\S]*?\})+)[\s\S]*?\}/gi;
 function _process(content, file, index, ret, settings, opt){
-	// 将css内容根据'@media'拆分，把每一部分看作一份单独的css处理，最后再经行组合
-	// 将同类型media合并处理，解决模块化开发时，多个同类型media中的图片不能合并到一张
-	// 但是...可能会有样式覆盖问题...写样式的时候尽量将@media写在页面底部
-	var i = 1,
-		media_css = {},
+    // 将css内容根据'@media'拆分，把每一部分看作一份单独的css处理，最后再经行组合
+    // 将同类型media合并处理，解决模块化开发时，多个同类型media中的图片不能合并到一张
+    // 但是...可能会有样式覆盖问题...写样式的时候尽量将@media写在页面底部
+    var i = 1,
+        media_css = {},
 
-		css = content.replace(__media_re, function(m, media_flag, media_cont) {
-			var flag = media_flag.replace(/[\s\:\(\)\[\]]+/g, '_');
+        css = content.replace(__media_re, function(m, media_flag, media_cont) {
+            var flag = media_flag.replace(/[\s\:\(\)\[\]]+/g, '_');
 
-			if(media_css[flag]) {
-				media_css[flag].css.push(media_cont);
-			}else{
-				media_css[flag] = {
-					id : i,
-					flag : media_flag,
-					css : [media_cont]
-				};
-				i++;
-			}
+            if(media_css[flag]) {
+                media_css[flag].css.push(media_cont);
+            }else{
+                media_css[flag] = {
+                    id : i,
+                    flag : media_flag,
+                    css : [media_cont]
+                };
+                i++;
+            }
 
-			return '';
-		});
+            return '';
+        });
 
-	// 处理无media样式
-	css = _processPart(css, file, index, ret, settings, opt);
+    // 处理无media样式
+    css = _processPart(css, file, index, ret, settings, opt);
 
-	// 将media处理后的内容插入页面最底部，这里可能会有问题...
-	// 插回原先位置太复杂了Orz...
-	fis.util.map(media_css, function (flag, item) {
-		var item_css = '@media '+ item.flag +'{'+ _processPart(item.css.join(''), file, (index ? index +'_'+item.id : item.id), ret, settings, opt) +'}'
+    // 将media处理后的内容插入页面最底部，这里可能会有问题...
+    // 插回原先位置太复杂了Orz...
+    fis.util.map(media_css, function (flag, item) {
+        var item_css = '@media '+ item.flag +'{'+ _processPart(item.css.join(''), file, (index ? index +'_'+item.id : item.id), ret, settings, opt) +'}'
 
-		css += item_css;
+        css += item_css;
     });
 
-	return css;
+    return css;
 }

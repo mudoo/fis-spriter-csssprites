@@ -3,10 +3,10 @@
 基于FIS的csssprites，由[fis-spriter-csssprites](https://github.com/fex-team/fis-spriter-csssprites) 修改而来，具体说明请访问原项目了解
 
 ### 特性
-在官方基础上，添加支持图片分组合并、@media处理、合并路径指定、rem支持  
+在官方基础上，添加支持图片分组合并、@media处理、合并路径指定、rem支持
 
 ####@media处理
-样式中存在的媒体查询，往往是需要做响应式兼容，大多数情况下需要跟其他图片分开处理，如retina处理。  
+样式中存在的媒体查询，往往是需要做响应式兼容，大多数情况下需要跟其他图片分开处理，如retina处理。
 所以，将**@media**当作单独的一部分样式处理，生成的css也写入到@media中，完美解决原先合并处理后生成的样式混乱问题。
 
 <table>
@@ -40,12 +40,12 @@ fis.match('::package', {
 
 ```javascript
 fis.config.set('settings.spriter.csssprites-group', {
-	//图片缩放比例
-	scale: 1,
-	//1rem像素值
-	rem: 50,
-	// 默认单位
-	unit: 'px',
+    //图片缩放比例
+    scale: 1,
+    //1rem像素值
+    rem: 50,
+    // 默认单位
+    unit: 'px',
     //图之间的边距
     margin: 10,
     //使用矩阵排列方式，默认为线性`linear`
@@ -56,8 +56,8 @@ fis.config.set('settings.spriter.csssprites-group', {
 
 fis
 .match('vue/*.css', {
-	// 这里的spriteTo为最高优先匹配，会覆盖全局的to设置
-	spriteTo : 'img/pkg'
+    // 这里的spriteTo为最高优先匹配，会覆盖全局的to设置
+    spriteTo : 'img/pkg'
 })
 ```
 
@@ -78,8 +78,8 @@ fis
 
 ```css
 .icon {
-	background: url('img/icon.png?__sprite') no-repeat;
-	background-size: .5rem .5rem;
+    background: url('img/icon.png?__sprite') no-repeat;
+    background-size: .5rem .5rem;
 }
 ```
 
@@ -87,11 +87,11 @@ fis
 
 ```css
 .icon {
-	display: inline-block;
-	width: .5rem;
-	height: .5rem;
-	background: url('img/icon.png?__sprite') no-repeat;
-	background-size: contain;
+    display: inline-block;
+    width: .5rem;
+    height: .5rem;
+    background: url('img/icon.png?__sprite') no-repeat;
+    background-size: contain;
 }
 ```
 
@@ -103,13 +103,13 @@ fis
 
 ```css
 .icon {
-	display: inline-block;
-	width: .5rem;
-	height: .5rem;
+    display: inline-block;
+    width: .5rem;
+    height: .5rem;
 }
 .icon-1 {
-	background: url('img/icon.png?__sprite') no-repeat;
-	background-size: contain;
+    background: url('img/icon.png?__sprite') no-repeat;
+    background-size: contain;
 }
 ```
 > 这种情况是无法识别成功的
